@@ -45,6 +45,7 @@ class Pane(object):
                 if event.type == KEYDOWN and event.key == K_SPACE:
                     '''Once the space bar is pressed, get the entire keyboards state'''
                     after = pygame.key.get_pressed()
+                    '''Break out of first loop'''
                     break
         '''function to set player movement properly'''
         player = self.set_player_speeds(player,after)

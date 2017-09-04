@@ -24,7 +24,7 @@ HALF_HEIGHT = int(WIN_HEIGHT / 2)
 movement_buttons = [K_d, K_w, K_a, K_s]
 
 """
-TODO: Make a text widget for displaying text when Player interacts with things (NPCs etc.)
+In Progress: Make a text widget for displaying text when Player interacts with things (NPCs etc.)
 In Progress: Make an action button for the main character to interact with objects, NPCs
 Complete: Make an NPC class
 TODO: Update the level code to support more than 1 level gracefully
@@ -81,7 +81,7 @@ class Main_poke:
         total_level_height = len(self.layout) * 32  # maybe make 32 an constant
         camera = Camera(complex_camera, total_level_width, total_level_height)
 
-        while 1:
+        while True:
             """clear all surfaces at begininng of loop"""
             self.everything.clear(self.screen, self.background)
             #self.monster_sprites.clear(self.screen, self.background)
@@ -94,19 +94,13 @@ class Main_poke:
                     """Detect any movement buttons and pass to player function to handle movement"""
                     if event.key in movement_buttons:
                         self.player.MoveKeyDown(event.key)
-                        move_keydown = True
                     if event.key == K_SPACE:
                         self.player.interact(event.key, self.player, self.npc, self.screen)
-                        #test = Pane()
-                        #self.screen, self.player = test.displayText(self.screen, self.player, 'Hope this works....')
-                        #pygame.event.set_allowed(None)
-                        #pygame.event.set_allowed(KEYDOWN)
 
                 elif event.type == KEYUP:
                     if event.key in movement_buttons:
                         """Detect any removal of movement buttons and pass to player function to turn off movement"""
                         self.player.MoveKeyUp(event.key)
-                        move_keydown = False
 
 
             """Update the camera based on the players new position in the level"""
