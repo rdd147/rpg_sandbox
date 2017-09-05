@@ -1,7 +1,7 @@
 from monster_generation import *
-from level001 import *
+import level001
 from player import Player
-from camera import *
+import camera
 from group_overload import Group_off
 from NPC import Npc
 
@@ -44,8 +44,8 @@ TODO: Make a suite of individual moves (like tackle or electrocute) that attach 
 TODO: Create scene animations such as what to show when the player tranisitions to battle mode and perhaps attacking
 """
 
-class Main_poke:
-    """The Main Pokemon Class - This class handles the main
+class Main_game:
+    """The Main Game Class - This class handles the main
     initialization and creating of the Game."""
 
     def __init__(self, width, height):
@@ -67,7 +67,7 @@ class Main_poke:
         """This is the Main Loop of the Game"""
 
         """Load All of our Sprites"""
-        self.LoadSprites();
+
 
         """Create the background"""
         self.background = pygame.Surface(self.screen.get_size())
@@ -76,14 +76,14 @@ class Main_poke:
         """Create the game clock to manage framerate"""
         self.timer = pygame.time.Clock()
 
-        """Make a 'camera' to follow the player and update the world accordingly"""
-        total_level_width = len(self.layout[0]) * 32  # calculate size of level in pixels
-        total_level_height = len(self.layout) * 32  # maybe make 32 an constant
-        camera = Camera(complex_camera, total_level_width, total_level_height)
+        """Load the level"""
+        level1 = level001.Level(1)
+        self.block_sprites, self.grass_sprites, self.npc_sprites, self.player_sprites, self.player, camera_x = level1.LoadSprites()
+
 
         while True:
             """clear all surfaces at begininng of loop"""
-            self.everything.clear(self.screen, self.background)
+            #self.block_sprites.clear(self.screen, self.background)
             #self.monster_sprites.clear(self.screen, self.background)
 
             """Event loop"""
@@ -95,7 +95,7 @@ class Main_poke:
                     if event.key in movement_buttons:
                         self.player.MoveKeyDown(event.key)
                     if event.key == K_SPACE:
-                        self.player.interact(event.key, self.player, self.npc, self.screen)
+                        self.player.interact(event.key, self.player, self.npc_sprites, self.screen)
 
                 elif event.type == KEYUP:
                     if event.key in movement_buttons:
@@ -104,17 +104,17 @@ class Main_poke:
 
 
             """Update the camera based on the players new position in the level"""
-            camera.update(self.player)
+            camera_x.update(self.player)
 
             """Draw the enviorment sprites with respect to the cameras offset from the players movement"""
-            self.block_sprites.draw(self.screen , [camera.height, camera.width])
-            self.grass_sprites.draw(self.screen, [camera.height, camera.width])
+            self.block_sprites.draw(self.screen , [camera_x.height, camera_x.width])
+            self.grass_sprites.draw(self.screen, [camera_x.height, camera_x.width])
 
             """Update and draw the player with respect to the enviorment"""
             self.player_sprites.update(self.block_sprites, self.grass_sprites, self.npc_sprites)
-            self.player_sprites.draw(self.screen, [camera.height, camera.width])
+            self.player_sprites.draw(self.screen, [camera_x.height, camera_x.width])
 
-            self.npc_sprites.draw(self.screen, [camera.height, camera.width])
+            self.npc_sprites.draw(self.screen, [camera_x.height, camera_x.width])
 
             """Actually draw everything"""
             pygame.display.flip()
@@ -122,50 +122,7 @@ class Main_poke:
             """Limit FPS"""
             self.timer.tick(30)
 
-    def LoadSprites(self):
-        """Load all of the sprites that we need"""
-        """calculate the center point offset"""
-        x_offset = (BLOCK_SIZE/2)
-        y_offset = (BLOCK_SIZE/2)
-        """Load the level"""
-        level1 = level()
-        self.layout = level1.getLayout()
-        img_list = level1.getSprites()
 
-        self.block_sprites = Group_off()
-        self.grass_sprites = Group_off()
-        self.npc_sprites = Group_off()
-        self.everything = Group_off()
-
-        """Iterate through the layout of the level"""
-        for y in xrange(len(self.layout)):
-            for x in xrange(len(self.layout[y])):
-                """Get the center point for the rects"""
-                centerPoint = [(x*BLOCK_SIZE)+x_offset,(y*BLOCK_SIZE+y_offset)]
-                """Determine what each position is, load the correct image at the center point and assign to a sprite group"""
-                if self.layout[y][x]==level1.BLOCK:
-                    block = basicSprite.Sprite(centerPoint, img_list[level1.BLOCK])
-                    self.block_sprites.add(block)
-                    self.everything.add(block)
-                elif self.layout[y][x]==level1.PLAYER:
-                    grass = basicSprite.Sprite(centerPoint, img_list[level1.GRASS])
-                    self.player = Player(centerPoint,img_list[level1.PLAYER])
-                    self.grass_sprites.add(grass)
-                    self.everything.add(self.player)
-                    self.everything.add(grass)
-                elif self.layout[y][x]==level1.GRASS:
-                    grass = basicSprite.Sprite(centerPoint, img_list[level1.GRASS])
-                    self.grass_sprites.add(grass)
-                    self.everything.add(grass)
-                elif self.layout[y][x]==level1.NPC:
-                    grass = basicSprite.Sprite(centerPoint, img_list[level1.GRASS])
-                    self.npc = Npc(centerPoint, img_list[level1.NPC], talk_text = ['I just met you And this is crazy So'
-                                                                                   ' heres my number So call me maybe!!!!', "Who said I can't sing..."])
-                    self.grass_sprites.add(grass)
-                    self.npc_sprites.add(self.npc)
-                    self.everything.add(self.npc)
-                    self.everything.add(grass)
-        self.player_sprites = Group_off(self.player)
 
 
 if __name__ == '__main__':
@@ -175,5 +132,5 @@ if __name__ == '__main__':
     squirt.attack()
     squirt.talk()
     charm.blurb()
-    loop = Main_poke(WIN_WIDTH,WIN_HEIGHT)
+    loop = Main_game(WIN_WIDTH,WIN_HEIGHT)
     loop.MainLoop()

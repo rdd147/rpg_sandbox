@@ -5,7 +5,7 @@ class Monster(object):
         self.level = level
         self.attack_stat
         self.defense_stat
-        print 'Genric Pokemon construction completed!'
+        print 'Genric Monster construction completed!'
 
     def attack(self):
         print 'Monster attacked!'

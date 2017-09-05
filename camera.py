@@ -1,6 +1,6 @@
 import pygame
 
-from monster_main import WIN_HEIGHT, WIN_WIDTH, HALF_HEIGHT, HALF_WIDTH, Rect
+import monster_main
 
 class Camera(object):
     def __init__(self, camera_func, width, height):
@@ -17,11 +17,11 @@ class Camera(object):
 def complex_camera(camera, target_rect):
     l, t, _, _ = target_rect
     _, _, w, h = camera
-    l, t, _, _ = -l + HALF_WIDTH, -t + HALF_HEIGHT, w, h  # center player
+    l, t, _, _ = -l + monster_main.HALF_WIDTH, -t + monster_main.HALF_HEIGHT, w, h  # center player
 
     l = min(0, l)  # stop scrolling at the left edge
-    l = max(-(camera.width - WIN_WIDTH), l)  # stop scrolling at the right edge
-    t = max(-(camera.height - WIN_HEIGHT), t)  # stop scrolling at the bottom
+    l = max(-(camera.width - monster_main.WIN_WIDTH), l)  # stop scrolling at the right edge
+    t = max(-(camera.height - monster_main.WIN_HEIGHT), t)  # stop scrolling at the bottom
     t = min(0, t)  # stop scrolling at the top
 
-    return Rect(l, t, w, h) , t, l
+    return monster_main.Rect(l, t, w, h) , t, l
