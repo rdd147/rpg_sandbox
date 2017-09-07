@@ -15,7 +15,6 @@ class Pane(object):
         pygame.init()
         '''Set font, font color, and different surfaces and fill colors to make a text box'''
         self.font = pygame.font.SysFont('Arial', 40)
-        pygame.display.set_caption('Box Test')
         self.text_rect = Rect(0,0,750,150)
         self.color = (255,0,0)
         self.surface = pygame.Surface((800, 200))
@@ -25,17 +24,18 @@ class Pane(object):
         pygame.display.update()
 
 
-    def displayText(self, screen, player, text_list):
+    def displayText(self, screen, text_list):
         """Loop over all text in list, action buttons hit in between"""
-        for text in text_list:
+        for num, text in enumerate(text_list):
+
             '''function to call to make text in a rect, return surface to draw with text on it'''
             self.text_surface = self.render_textrect(text,self.font,self.text_rect,self.color,(0,0,0))
+
             '''Blit all surfaces to screen at different offsets'''
             screen.blit(self.surface, (0,0))
             screen.blit(self.surface2, (12, 12))
             screen.blit(self.text_surface, (25, 25))
-            #screen.blit(self.font.render(text, True, (255,0,0)), (25, 25))
-            #self.rect = pygame.draw.rect(self.surface, (black), (175, 75, 200, 100), 2)
+
             '''Event loop to wait for keydown space event and constant redrawing'''
             while True:
                 pygame.display.update()
@@ -43,28 +43,11 @@ class Pane(object):
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == KEYDOWN and event.key == K_SPACE:
-                    '''Once the space bar is pressed, get the entire keyboards state'''
-                    after = pygame.key.get_pressed()
-                    '''Break out of first loop'''
+                    '''Break out of loop'''
                     break
-        '''function to set player movement properly'''
-        player = self.set_player_speeds(player,after)
-        return screen , player
+        """Return the screen to the monster_main to be drawn"""
+        return screen
 
-    def set_player_speeds(self,player,after):
-        '''zero out players currrent movement'''
-        player.xMove = 0
-        player.yMove = 0
-        '''depending on what keys are currently pressed, set the movement levels appropriately'''
-        if after[K_w] == 1:
-            player.yMove -= 4
-        if after[K_s] == 1:
-            player.yMove += 4
-        if after[K_a] == 1:
-            player.xMove -= 4
-        if after[K_d] == 1:
-            player.xMove += 4
-        return player
 
 
     def render_textrect(self, string, font, rect, text_color, background_color, justification=0):

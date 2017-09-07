@@ -58,16 +58,11 @@ class Main_game:
         self.width = width
         self.height = height
         """Create the Screen"""
-        self.screen = pygame.display.set_mode((self.width
-                                               , self.height))
-        self.entities = pygame.sprite.Group()
-
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption('RPG sandbox')
 
     def MainLoop(self):
         """This is the Main Loop of the Game"""
-
-        """Load All of our Sprites"""
-
 
         """Create the background"""
         self.background = pygame.Surface(self.screen.get_size())
@@ -82,26 +77,16 @@ class Main_game:
 
 
         while True:
-            """clear all surfaces at begininng of loop"""
-            #self.block_sprites.clear(self.screen, self.background)
-            #self.monster_sprites.clear(self.screen, self.background)
 
             """Event loop"""
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
+                elif event.type == KEYUP:
+                    pass
                 elif event.type == KEYDOWN:
-                    """Detect any movement buttons and pass to player function to handle movement"""
-                    if event.key in movement_buttons:
-                        self.player.MoveKeyDown(event.key)
                     if event.key == K_SPACE:
                         self.player.interact(event.key, self.player, self.npc_sprites, self.screen)
-
-                elif event.type == KEYUP:
-                    if event.key in movement_buttons:
-                        """Detect any removal of movement buttons and pass to player function to turn off movement"""
-                        self.player.MoveKeyUp(event.key)
-
 
             """Update the camera based on the players new position in the level"""
             camera_x.update(self.player)

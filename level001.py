@@ -101,8 +101,8 @@ class Level():
         self.player_sprites = Group_off(self.player)
 
         """Make a 'camera' to follow the player and update the world accordingly"""
-        total_level_width = len(self.layout[0]) * 32  # calculate size of level in pixels
-        total_level_height = len(self.layout) * 32  # maybe make 32 an constant
+        total_level_width = len(self.layout[0]) * monster_main.BLOCK_SIZE  # calculate size of level in pixels
+        total_level_height = len(self.layout) * monster_main.BLOCK_SIZE
         camera_x = camera.Camera(camera.complex_camera, total_level_width, total_level_height)
 
         return self.block_sprites, self.grass_sprites, self.npc_sprites, self.player_sprites, self.player, camera_x
